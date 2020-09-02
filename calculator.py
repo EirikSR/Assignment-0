@@ -38,7 +38,11 @@ def cos(x, N):
 
 def divide(x, y):
 	#Converting to float for divisiding
-	return float(x)/float(y)
+
+    if(y == 0):
+        raise ZeroDivisionError
+    else:
+	    return float(x)/y
 
 def fibonacci(N):
 	a = 0

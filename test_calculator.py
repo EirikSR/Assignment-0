@@ -43,3 +43,10 @@ def test_TypeError():
         assert False
     except TypeError:
         assert True
+
+def test_ZeroDivisionError():
+    try:
+        calculator.divide(5, 0)
+        assert False
+    except ZeroDivisionError:
+        assert True
