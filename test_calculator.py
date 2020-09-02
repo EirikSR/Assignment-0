@@ -7,14 +7,9 @@ margin = 1E-12
 
 sin_test = 0.3
 cos_test = 0.3
-x = 'f3'
-y = '1f'
 
 def test_add():
-	with pytest.raises(ValueError):
-		float(x)
-		float(y)
-	assert calculator.add(x, y) == 4
+	assert calculator.add(1, 3.0) == 4
 
 def test_add_float():
 	assert calculator.add(0.1, 0.2) - 0.3 < margin
@@ -41,3 +36,10 @@ def test_cos(): #Optional1
 def test_fibonacci(): #Optional2
 	#Obtained 100th (F_99) from table
 	assert calculator.fibonacci(100) == 218922995834555169026
+
+def test_TypeError():
+    try:
+        calculator.add("f", 3.0)
+        assert False
+    except TypeError:
+        assert True

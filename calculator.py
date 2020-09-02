@@ -1,7 +1,18 @@
 import pytest
 
 def add(x, y):
-	return x+y
+
+    if(type(x) != type(y)):
+        try:
+            float(x)
+            float(y)
+        except:
+            raise TypeError(f"Trying to add {x, type(x)} and {y, type(y)}")
+            
+        
+        return x+y
+    else:
+        return x+y
 
 def factorial(x):
 	ret = 1
@@ -37,3 +48,8 @@ def fibonacci(N):
 		b = a
 		a = c
 	return a
+
+x = 1
+y = "y"
+
+print()
