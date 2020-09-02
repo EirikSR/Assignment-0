@@ -8,45 +8,64 @@ margin = 1E-12
 sin_test = 0.3
 cos_test = 0.3
 
-def test_add():
-	assert calculator.add(1, 3.0) == 4
+@pytest.mark.parametrize("arg, expected_output", [[(1, 5), 6], [(2, -4), -2], [(2, -2), 0]])
+def test_add(arg, expected_output):
+	assert calculator.add(arg[0], arg[1]) == expected_output
 
-def test_add_float():
-	assert calculator.add(0.1, 0.2) - 0.3 < margin
+@pytest.mark.parametrize("arg, expected_output", [[(1.5, 5.2), 6.7], [(2.1, -2.4), -0.3], [(2.2, -2), 0.2]])
+def test_add_float(arg, expected_output):
+	assert abs(calculator.add(arg[0], arg[1]) - expected_output) < margin
 
-def test_add_string():
-	assert calculator.add('Hello ' , 'World') == 'Hello World'
+@pytest.mark.parametrize("arg, expected_output", [[('Marie', 'kjeks'), 'Mariekjeks'],
+                                                 [('Papp', 'skalle'), 'Pappskalle'], 
+                                                 [('Hello', ' world'), 'Hello world']])
+def test_add_string(arg, expected_output):
+	assert calculator.add(arg[0], arg[1]) == expected_output
+
+@pytest.mark.parametrize("arg, expected_output", [[3, 6], [4, 24], [10, 3628800]])
+def test_factorial(arg, expected_output):
+	assert expected_output == calculator.factorial(arg)
+
+@pytest.mark.parametrize("arg, expected_output", [[(20, 5), 4], [(32, 4), 8], [(10, 4), 2.5]])
+def test_divide(arg, expected_output):
+	assert abs(calculator.divide(arg[0], arg[1])) - expected_output < margin
+
+@pytest.mark.parametrize("arg, expected_output", [[0.2, math.sin(0.2)], [0.3, math.sin(0.3)], [0.4, math.sin(0.4)]])
+def test_sin(arg, expected_output):
+	#N = 7 gives high accuracy
+	assert abs(calculator.sin(arg, 7)) - expected_output < margin
 
 
-def test_factorial():
-	assert 120 == calculator.factorial(5)
-
-def test_sin():
-	#N = 5 gives high accuracy
-	assert calculator.sin(sin_test, 5) - math.sin(sin_test) < margin
-
-def test_divide():
-	assert calculator.divide(25, 3) - 25./3. < margin
-
-
-def test_cos(): #Optional1
+@pytest.mark.parametrize("arg, expected_output", [[0.2, math.cos(0.2)], [0.3, math.cos(0.3)], [0.4, math.cos(0.4)]])
+def test_cos(arg, expected_output): #Optional1
 	#N = 5 gave error, 6 needed to be within margin
-	assert calculator.cos(cos_test, 6) - math.cos(cos_test) < margin
+	assert abs(calculator.cos(arg, 7)) - expected_output < margin
 
-def test_fibonacci(): #Optional2
+@pytest.mark.parametrize("arg, expected_output", [[16, 610], [21, 6765], [100, 218922995834555169026]])
+def test_fibonacci(arg, expected_output): #Optional2
 	#Obtained 100th (F_99) from table
-	assert calculator.fibonacci(100) == 218922995834555169026
+	assert calculator.fibonacci(arg) == expected_output
 
-def test_TypeError():
+@pytest.mark.parametrize("arg, expected_output", [[('a', 2), True],
+                                                 [(2, 3), False], 
+                                                 [('Hello', 'world'), False]])
+def test_TypeError(arg, expected_output):
+
     try:
-        calculator.add("f", 3.0)
-        assert False
+        calculator.add(arg[0], arg[1])
+        b = False
     except TypeError:
-        assert True
+        b = True
+    assert b == expected_output
 
-def test_ZeroDivisionError():
+@pytest.mark.parametrize("arg, expected_output", [[(5, 2), False],
+                                                 [(2, 0), True], 
+                                                 [(7, 0.0001), False]])
+
+def test_ZeroDivisionError(arg, expected_output):
     try:
-        calculator.divide(5, 0)
-        assert False
+        calculator.divide(arg[0], arg[1])
+        b = False
     except ZeroDivisionError:
-        assert True
+        b = True
+    assert b == expected_output
